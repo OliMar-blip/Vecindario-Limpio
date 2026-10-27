@@ -1,20 +1,30 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+// Ruta principal (Portada / Landing)
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
 
+// Panel Principal
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+// Módulos del Sistema
+Route::get('/vecinos', function () {
+    return view('vecinos');
+});
+
+Route::get('/acopio', function () {
+    return view('acopio');
+});
+
+Route::get('/rutas', function () {
+    return view('rutas');
+});
+
+Route::get('/reportes', function () {
+    return view('reportes');
+});

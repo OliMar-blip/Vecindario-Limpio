@@ -1,30 +1,29 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="es" class="h-full">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+@include('partials.header')
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+<body class="h-full font-sans antialiased text-slate-800">
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
-            </div>
+    <!-- FONDOS Y CENTRADO ABSOLUTO -->
+    <div class="min-h-screen w-full flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat relative" 
+         style="background-image: linear-gradient(rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.65)), url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1920&auto=format&fit=crop');">
+        
+        <!-- CONTENIDO DEL INDEX (TARJETA DE LOGIN) -->
+        <main class="w-full flex justify-center z-10">
+            @yield('content')
+        </main>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
-            </div>
+        <!-- FOOTER DISCRETO EN LA PORTADA -->
+        <div class="absolute bottom-4 text-center w-full text-slate-300 text-xs z-10">
+            <p>&copy; 2026 EcoBarrio Los Olivos - Sede Los Olivos. Todos los derechos reservados.</p>
         </div>
-    </body>
+    </div>
+
+    <!-- Scripts Globales -->
+    <script src="{{ asset('js/state.js') }}"></script>
+    <script src="{{ asset('js/utils.js') }}"></script>
+
+    @stack('scripts')
+</body>
 </html>

@@ -1,36 +1,35 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="es" class="h-full bg-slate-50">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+@include('partials.header')
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+<body class="h-full text-slate-800 font-sans antialiased overflow-x-hidden">
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <div id="app-view" class="min-h-screen flex flex-col md:flex-row bg-slate-100">
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+        <!-- Muestra el sidebar en TODAS las rutas excepto en la portada raíz -->
+        @if(!Request::is('/'))
+            @include('partials.navegacion')
+        @endif
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body>
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="flex-1 flex flex-col min-w-0 overflow-y-auto w-full">
+            @yield('content')
+            
+            @if(!Request::is('/'))
+                @include('partials.footer')
+            @endif
+        </main>
+
+    </div>
+
+    <!-- Scripts Globales -->
+    <script src="{{ asset('js/state.js') }}"></script>
+    <script src="{{ asset('js/utils.js') }}"></script>
+    <script src="{{ asset('js/auth.js') }}"></script>
+    <script src="{{ asset('js/layout.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+
+    @stack('scripts')
+</body>
 </html>
