@@ -20,9 +20,21 @@
         </div>
     </div>
 
+    <!-- Script Oficial de Iconos Lucide (CDN Global) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <!-- Scripts Globales -->
     <script src="{{ asset('js/state.js') }}"></script>
     <script src="{{ asset('js/utils.js') }}"></script>
+
+    <!-- Inicializador Global de Iconos -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
 
     @stack('scripts')
 </body>

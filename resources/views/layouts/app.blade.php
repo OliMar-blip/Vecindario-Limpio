@@ -23,12 +23,24 @@
 
     </div>
 
-    <!-- Scripts Globales -->
+    <!-- Script Oficial de Iconos Lucide (CDN Global) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Scripts Globales del Sistema -->
     <script src="{{ asset('js/state.js') }}"></script>
     <script src="{{ asset('js/utils.js') }}"></script>
     <script src="{{ asset('js/auth.js') }}"></script>
     <script src="{{ asset('js/layout.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+
+    <!-- Inicializador Global de Iconos para evitar que desaparezcan -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
 
     @stack('scripts')
 </body>

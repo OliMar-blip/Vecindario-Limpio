@@ -1,7 +1,19 @@
-// ESTADO GLOBAL
-let currentUser = JSON.parse(localStorage.getItem('ecobarrio_lo_user')) || null;
+// HELPER SEGURO PARA RECUPERAR DATOS DE STORAGE
+function getStoredData(key, fallbackValue) {
+    try {
+        const item = localStorage.getItem(key);
+        if (!item || item === 'undefined' || item === 'null') {
+            return fallbackValue;
+        }
+        return JSON.parse(item);
+    } catch (error) {
+        console.warn(`Error al parsear ${key} de localStorage, usando valor por defecto:`, error);
+        return fallbackValue;
+    }
+}
 
-let acopioList = JSON.parse(localStorage.getItem('ecobarrio_lo_acopio')) || [
+// ESTADO GLOBAL
+const defaultAcopio = [
     { id: 1, name: 'Punto Limpio Covida', sector: 'Covida - Av. Antúnez de Mayolo', type: 'Plásticos y PET', level: 85, status: 'Crítico' },
     { id: 2, name: 'EcoPunto Sol de Oro', sector: 'Sol de Oro - Ca. Los Alisos', type: 'Cartón y Papel', level: 45, status: 'Normal' },
     { id: 3, name: 'Contenedor Mercado Pro', sector: 'Pro - Av. Alfredo Mendiola', type: 'Vidrio y Orgánicos', level: 20, status: 'Óptimo' },
@@ -9,7 +21,7 @@ let acopioList = JSON.parse(localStorage.getItem('ecobarrio_lo_acopio')) || [
     { id: 5, name: 'Punto Verde Villa Sol', sector: 'Villa Sol - Av. Universitaria', type: 'Plásticos y PET', level: 35, status: 'Óptimo' }
 ];
 
-let vecinosList = JSON.parse(localStorage.getItem('ecobarrio_lo_vecinos')) || [
+const defaultVecinos = [
     { id: 1, name: 'María Elena Gutiérrez', dni: '45123987', sector: 'Sol de Oro', badge: 'Líder Verde', points: 1250, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100' },
     { id: 2, name: 'Jorge Carlos Quispe', dni: '10982345', sector: 'Covida', badge: 'Brigadista VIP', points: 1100, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100' },
     { id: 3, name: 'Lucía Mendoza', dni: '72341098', sector: 'Mercurio', badge: 'EcoVecino', points: 980, avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100' },
@@ -18,10 +30,32 @@ let vecinosList = JSON.parse(localStorage.getItem('ecobarrio_lo_vecinos')) || [
     { id: 6, name: 'Gonzalo Fernández', dni: '43981276', sector: 'Covida', badge: 'EcoVecino', points: 620, avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100' }
 ];
 
+let currentUser = getStoredData('ecobarrio_lo_user', null);
+let acopioList = getStoredData('ecobarrio_lo_acopio', defaultAcopio);
+let vecinosList = getStoredData('ecobarrio_lo_vecinos', defaultVecinos);
+
+// FUNCIONES DE PERSISTENCIA
+function saveUserData(user) {
+    currentUser = user;
+    if (user) {
+        localStorage.setItem('ecobarrio_lo_user', JSON.stringify(user));
+    } else {
+        localStorage.removeItem('ecobarrio_lo_user');
+    }
+}
+
 function saveAcopioData() {
-    localStorage.setItem('ecobarrio_lo_acopio', JSON.stringify(acopioList));
+    try {
+        localStorage.setItem('ecobarrio_lo_acopio', JSON.stringify(acopioList));
+    } catch (e) {
+        console.error('Error guardando puntos de acopio en localStorage:', e);
+    }
 }
 
 function saveVecinosData() {
-    localStorage.setItem('ecobarrio_lo_vecinos', JSON.stringify(vecinosList));
+    try {
+        localStorage.setItem('ecobarrio_lo_vecinos', JSON.stringify(vecinosList));
+    } catch (e) {
+        console.error('Error guardando vecinos en localStorage:', e);
+    }
 }

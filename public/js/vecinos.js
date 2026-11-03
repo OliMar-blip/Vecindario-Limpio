@@ -1,4 +1,31 @@
-// RANKING Y PADRÓN DE ECOCOLABORADORES
+// ==========================================
+// GESTIÓN DE ECOCOLABORADORES Y RANKING
+// ==========================================
+
+// Inicializar la lista desde localStorage o usar los valores por defecto
+let vecinosList = JSON.parse(localStorage.getItem('vecinos_data')) || [
+    { id: 1, name: "María Elena Gutiérrez", dni: "45123987", sector: "Sol de Oro", badge: "Líder Verde", points: 1250, avatar: "https://ui-avatars.com/api/?name=Maria+Elena+Gutierrez&background=22c55e&color=fff" },
+    { id: 2, name: "Jorge Carlos Quispe", dni: "10982345", sector: "Covida", badge: "Brigadista VIP", points: 1100, avatar: "https://ui-avatars.com/api/?name=Jorge+Carlos+Quispe&background=22c55e&color=fff" },
+    { id: 3, name: "Lucía Mendoza", dni: "78451236", sector: "Mercurio", badge: "EcoVecino", points: 980, avatar: "https://ui-avatars.com/api/?name=Lucia+Mendoza&background=22c55e&color=fff" }
+];
+
+// Función para guardar en el almacenamiento local del navegador
+function saveVecinosData() {
+    localStorage.setItem('vecinos_data', JSON.stringify(vecinosList));
+}
+
+// Función de seguridad para evitar inyecciones HTML en textos
+function escapeHtml(text) {
+    if (!text) return '';
+    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+// Función simulada de Toast si no la tienes global
+function showToast(message, type = 'success') {
+    console.log(`[Toast - ${type}]: ${message}`);
+}
+
+// Renderizar tabla y podio principal
 function renderVecinosRanking() {
     // Ordenar por EcoPuntos descendente para generar ranking
     vecinosList.sort((a, b) => b.points - a.points);
@@ -8,6 +35,7 @@ function renderVecinosRanking() {
 
     // Render Tabla Completa
     const tbody = document.getElementById('vecinos-table-body');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     vecinosList.forEach((vecino, index) => {
@@ -52,14 +80,21 @@ function renderVecinosRanking() {
         tbody.appendChild(tr);
     });
 
+    // Guardar cambios automáticamente
     saveVecinosData();
+
     const statEco = document.getElementById('stat-total-ecosocios');
     if (statEco) statEco.innerText = vecinosList.length;
-    lucide.createIcons();
+    
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
 }
 
+// Renderizar el podio del Top 3
 function renderPodium() {
     const podium = document.getElementById('podium-container');
+    if (!podium) return;
     podium.innerHTML = '';
 
     const top3 = vecinosList.slice(0, 3);
@@ -67,7 +102,7 @@ function renderPodium() {
 
     const order = [top3[1], top3[0], top3[2]]; // Visual: 2do, 1ro, 3ro
 
-    order.forEach((item, idx) => {
+    order.forEach((item) => {
         if (!item) return;
         const isFirst = item === top3[0];
         const card = document.createElement('div');
@@ -90,11 +125,11 @@ function renderPodium() {
     });
 }
 
+// Sumar puntos a un vecino
 function addPoints(id) {
     const index = vecinosList.findIndex(v => v.id === id);
     if (index !== -1) {
         vecinosList[index].points += 50;
-        // Actualizar insignias según puntaje acumulado
         if (vecinosList[index].points >= 1000) vecinosList[index].badge = 'Líder Verde';
         else if (vecinosList[index].points >= 800) vecinosList[index].badge = 'Brigadista VIP';
 
@@ -103,36 +138,49 @@ function addPoints(id) {
     }
 }
 
+// Filtrar vecinos desde la barra de búsqueda
 function filterVecinos() {
-    const query = document.getElementById('search-vecinos').value.toLowerCase();
+    const searchInput = document.getElementById('search-vecinos');
+    if (!searchInput) return;
+    const query = searchInput.value.toLowerCase();
     const rows = document.querySelectorAll('#vecinos-table-body tr');
 
     rows.forEach(row => {
         const text = row.innerText.toLowerCase();
-        if (text.includes(query)) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
+        row.style.display = text.includes(query) ? '' : 'none';
     });
 }
 
+// Control de modales
 function openVecinoModal() {
-    document.getElementById('form-vecino').reset();
-    document.getElementById('modal-vecino').classList.remove('hidden');
+    const form = document.getElementById('form-vecino');
+    if (form) form.reset();
+    const modal = document.getElementById('modal-vecino');
+    if (modal) modal.classList.remove('hidden');
 }
 
 function closeVecinoModal() {
-    document.getElementById('modal-vecino').classList.add('hidden');
+    const modal = document.getElementById('modal-vecino');
+    if (modal) modal.classList.add('hidden');
 }
 
+// Guardar nuevo vecino desde el formulario
 function saveVecino(e) {
-    e.preventDefault();
-    const name = document.getElementById('vecino-name').value;
-    const dni = document.getElementById('vecino-dni').value;
-    const sector = document.getElementById('vecino-sector').value;
-    const badge = document.getElementById('vecino-badge').value;
-    const points = parseInt(document.getElementById('vecino-points').value) || 0;
+    if (e) e.preventDefault();
+    
+    const nameEl = document.getElementById('vecino-name');
+    const dniEl = document.getElementById('vecino-dni');
+    const sectorEl = document.getElementById('vecino-sector');
+    const badgeEl = document.getElementById('vecino-badge');
+    const pointsEl = document.getElementById('vecino-points');
+
+    if (!nameEl || !dniEl || !sectorEl) return;
+
+    const name = nameEl.value;
+    const dni = dniEl.value;
+    const sector = sectorEl.value;
+    const badge = badgeEl ? badgeEl.value : 'EcoVecino';
+    const points = pointsEl ? (parseInt(pointsEl.value) || 0) : 0;
 
     vecinosList.push({
         id: Date.now(),
@@ -144,3 +192,10 @@ function saveVecino(e) {
     renderVecinosRanking();
     showToast('EcoColaborador registrado exitosamente en el ranking', 'success');
 }
+
+// Ejecutar renderizado al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('vecinos-table-body')) {
+        renderVecinosRanking();
+    }
+});

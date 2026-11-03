@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <script src="{{ asset('js/tailwind-config.js') }}"></script>
 </head>
-<body>
-    
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
 </body>
 </html>

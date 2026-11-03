@@ -1,21 +1,38 @@
-function handleLogin(event) {
-    if (event) event.preventDefault();
+function loginDemo(rol) {
+    if (rol === 'admin') {
+        localStorage.setItem('ecobarrio_lo_user', JSON.stringify({
+            id: 0,
+            name: 'Administrador Municipal',
+            role: 'Admin General',
+            email: 'admin@losolivos.gob.pe'
+        }));
+    } else if (rol === 'brigadista') {
+        localStorage.setItem('ecobarrio_lo_user', JSON.stringify({
+            id: 2,
+            name: 'Jorge Quispe',
+            role: 'Brigadista VIP',
+            email: 'jorge.quispe@losolivos.gob.pe'
+        }));
+    } else {
+        localStorage.setItem('ecobarrio_lo_user', JSON.stringify({
+            id: 1,
+            name: 'María Gutiérrez',
+            role: 'EcoVecino Líder',
+            email: 'maria.gutierrez@gmail.com'
+        }));
+    }
     
-    // Aquí puedes capturar los datos si los necesitas
-    const email = document.getElementById('login-email')?.value;
-    const password = document.getElementById('login-password')?.value;
-
-    // Simulación de validación exitosa: Redirigimos a la ruta de Laravel
     window.location.href = "/dashboard";
 }
 
-function loginAdminConCodigo() {
-    const codigo = prompt("🔒 Acceso Restringido para Administradores.\nIngrese el código de seguridad (Ej: 2026):");
-    
-    if (codigo === "2026") {
-        alert("✅ Código correcto. Bienvenido Administrador.");
-        window.location.href = "/dashboard"; 
-    } else if (codigo !== null) {
-        alert("❌ Código incorrecto. Acceso denegado.");
-    }
+function handleLogin(event) {
+    event.preventDefault();
+    // Simulación de login general por formulario
+    localStorage.setItem('ecobarrio_lo_user', JSON.stringify({
+        id: 1,
+        name: 'Usuario General',
+        role: 'EcoVecino',
+        email: 'usuario@losolivos.gob.pe'
+    }));
+    window.location.href = "/dashboard";
 }
