@@ -36,4 +36,4 @@ class GeneralController extends Controller
     {
         return view('reportes');
     }
-}
+}/* cambio */
